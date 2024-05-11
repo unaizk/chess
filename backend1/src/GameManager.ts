@@ -19,13 +19,15 @@ export class GameManager {
     }
 
     removeUser(socket : WebSocket){
-        this.users = this.users.filter(user => user!=socket)
+        this.users = this.users.filter(user => user!==socket)
         // stop the game here becuase users left
     }
 
     private addHandler(socket : WebSocket){
         socket.on('message',(data) =>{
             const message = JSON.parse(data.toString())
+            console.log(message);
+            
             if(message.type === INIT_GAME ){
                 if(this.pendingUser){
                     const game = new Game(this.pendingUser,socket);

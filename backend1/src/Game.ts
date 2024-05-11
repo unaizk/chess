@@ -5,7 +5,7 @@ import { GAME_OVER, INIT_GAME, MOVE } from "./messages";
 export class Game {
     public player1 : WebSocket
     public player2 : WebSocket
-    
+    private moveCount = 0
     public board : Chess
     private startTime : Date
     constructor (player1 : WebSocket, player2 : WebSocket){
@@ -32,10 +32,10 @@ export class Game {
         from: string,  to: string
     }){
 
-        if(this.board.moves.length % 2 ===0 && this.player1 !== socket){
+        if(this.moveCount % 2 === 0 && this.player1 !== socket){
             return
         }
-        if(this.board.moves.length % 2 ===0 && this.player2 !== socket){
+        if(this.moveCount % 2 === 1 && this.player2 !== socket){
             return
         }
         try {
@@ -47,13 +47,13 @@ export class Game {
         }
 
         if(this.board.isGameOver()){
-            this.player1.emit(JSON.stringify({
+            this.player1.send(JSON.stringify({
                 type : GAME_OVER,
                 payload : {
                     winner : this.board.turn() === 'w' ? "black" : "white"
                 }
             }));
-            this.player2.emit(JSON.stringify({
+            this.player2.send(JSON.stringify({
                 type : GAME_OVER,
                 payload : {
                     winner : this.board.turn() === 'w' ? "black" : "white"
@@ -62,18 +62,18 @@ export class Game {
             return
         }
 
-        if(this.board.moves.length % 2 ===0){
-            this.player1.emit(JSON.stringify({
+        if(this.moveCount % 2 ===0){
+            this.player2.send(JSON.stringify({
                 type : MOVE,
                 payload : move
             }));
             
         }else{
-            this.player2.emit(JSON.stringify({
+            this.player1.send(JSON.stringify({
                 type : MOVE,
                 payload : move
             }))
         }
-        
+        this.moveCount++
     }
 }
