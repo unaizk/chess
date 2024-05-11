@@ -31,9 +31,18 @@ export class Game {
     makeMove(socket : WebSocket, move : {
         from: string,  to: string
     }){
+
+        if(this.board.moves.length % 2 ===0 && this.player1 !== socket){
+            return
+        }
+        if(this.board.moves.length % 2 ===0 && this.player2 !== socket){
+            return
+        }
         try {
             this.board.move(move)
         } catch (error) {
+            console.log(error);
+            
             return
         }
 
