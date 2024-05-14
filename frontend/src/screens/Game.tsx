@@ -3,12 +3,11 @@ import { useEffect, useState } from "react";
 import Button from "../components/Button"
 import ChessBoard from "../components/ChessBoard"
 import useSocket from "../hooks/useSocket"
+import { GAME_OVER, INIT_GAME, MOVE } from "../messages/message";
 
 
 
-export const INIT_GAME = "init_game";
-export const MOVE = "move"
-export const GAME_OVER = "game_over"
+
 
 
 const Game = () => {
@@ -51,9 +50,9 @@ const Game = () => {
       <div className="pt-8 max-w-screen-lg w-full">
           <div className="grid grid-cols-12 gap-4">
               <div className="col-span-12 md:col-span-8 flex justify-center ">
-                  <ChessBoard board={board}/>
+                  <ChessBoard chess={chess} setBoard={setBoard} socket={socket} board={board}/>
               </div>
-              <div className="col-span-12 bg-slate-800 md:col-span-4 flex justify-center ">
+              <div className="col-span-12 bg-slate-900 md:col-span-4 flex justify-center ">
                 <div className="pt-8">
                   <Button onClick={() =>{
                     socket.send(JSON.stringify({
